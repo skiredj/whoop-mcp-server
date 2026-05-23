@@ -1,10 +1,8 @@
-$ cat /tmp/whoop-fix/src/index.ts
-
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import express, { type Request, type Response } from 'express';import express, { type Request, type Response } from 'express';
-import cors from 'cors';
+import { CallToolRequestSchema, ListToolsRequestSchema, ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
+import express, { type Request, type Response } from 'express';
 import { WhoopClient } from './whoop-client.js';
 import { WhoopDatabase } from './database.js';
 import { WhoopSync } from './sync.js';
@@ -343,11 +341,13 @@ async function main(): Promise<void> {
 		process.stderr.write('Whoop MCP server running on stdio\n');
 	} else {
 		const app = express();
-		app.use(cors({
-			origin: '*',
-			methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-			allowedHeaders: ['Content-Type', 'mcp-session-id', 'Authorization'],
-		}));
+		app.use((req, res, next) => {
+			res.header('Access-Control-Allow-Origin', '*');
+			res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+			res.header('Access-Control-Allow-Headers', 'Content-Type, mcp-session-id, Authorization');
+			if (req.method === 'OPTIONS') { res.sendStatus(200); return; }
+			next();
+		});
 		app.use(express.json());
 
 		app.get('/callback', async (req: Request, res: Response) => {
