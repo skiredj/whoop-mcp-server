@@ -3,8 +3,7 @@ $ cat /tmp/whoop-fix/src/index.ts
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { CallToolRequestSchema, ListToolsRequestSchema, ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
-import express, { type Request, type Response } from 'express';
+import express, { type Request, type Response } from 'express';import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import { WhoopClient } from './whoop-client.js';
 import { WhoopDatabase } from './database.js';
