@@ -348,7 +348,6 @@ async function main(): Promise<void> {
 			if (req.method === 'OPTIONS') { res.sendStatus(200); return; }
 			next();
 		});
-		app.use(express.json());
 
 		app.get('/callback', async (req: Request, res: Response) => {
 			const code = req.query.code as string | undefined;
